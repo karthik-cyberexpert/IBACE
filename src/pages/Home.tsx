@@ -14,6 +14,33 @@ import {
   Dumbbell
 } from 'lucide-react';
 
+// Helper Component for Menu Items to handle shared Animation Logic
+const MenuGridItem = ({ id, activeId, onClick, icon, text, extraClass = "" }: any) => {
+    // If this is the active button, we apply the "Fly Away" animation 
+    // BUT we must make sure the parent doesn't unmount it immediately.
+    // In our current logic, the parent `showMenuGrid` becomes false after 2.5s.
+    // So we can just animate this specific item UPWARDS if active.
+    
+    return (
+        <motion.div 
+            className={`grid-item ${extraClass}`} 
+            onClick={onClick}
+            animate={activeId === id ? { 
+                y: -600, 
+                scale: 0.8, 
+                opacity: 0 
+            } : {}}
+            transition={{ 
+                duration: 2, 
+                ease: "easeInOut",
+                delay: 0.5 
+            }}
+        >
+            {icon} {text}
+        </motion.div>
+    );
+};
+
 function Home() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [showMenuGrid, setShowMenuGrid] = useState(false);
@@ -23,11 +50,12 @@ function Home() {
   const [showWelcomeAnimation, setShowWelcomeAnimation] = useState(false);
   const [welcomeAnimationData, setWelcomeAnimationData] = useState<any>(null);
 
-  /* 
-   * Robot Animation Removed as per user request.
-   * Transition is now: Main Menu -> Sub Menu immediately.
-   */
-  // const [showRobotAnimation, setShowRobotAnimation] = useState(false); // Removed
+  const [showRobotAnimation, setShowRobotAnimation] = useState(false); // Using this for Drone animation state now
+  const [droneAnimationData, setDroneAnimationData] = useState<any>(null);
+  
+  const [clickedButtonRect, setClickedButtonRect] = useState<DOMRect | null>(null);
+  const [activeButtonId, setActiveButtonId] = useState<string | null>(null);
+
   const [showSubMenu, setShowSubMenu] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
@@ -44,13 +72,18 @@ function Home() {
       .then(res => res.json())
       .then(data => setWelcomeAnimationData(data))
       .catch(err => console.error("Failed to load welcome animation", err));
+
+    fetch('/assets/drone_fly.json')
+       .then(res => res.json())
+       .then(data => setDroneAnimationData(data))
+       .catch(err => console.error("Failed to load drone animation", err));
   }, []);
 
   // Toggle Form
   const toggleForm = () => {
     if (showSadAnimation) setShowSadAnimation(false);
     if (showWelcomeAnimation) setShowWelcomeAnimation(false);
-    // if (showRobotAnimation) setShowRobotAnimation(false); 
+    if (showRobotAnimation) setShowRobotAnimation(false); 
     if (showSubMenu) setShowSubMenu(false);
     
     setIsFormOpen(!isFormOpen);
@@ -68,12 +101,32 @@ function Home() {
     setShowSadAnimation(true);
   };
 
-  // Handle Menu Item Click -> Sub Menu (Immediate)
-  const handleMenuClick = (category: string) => {
-    setShowMenuGrid(false);
+  // Handle Menu Item Click -> Capture Coords -> Drone Animation -> Sub Menu OR Navigation
+  const handleMenuClick = (category: string, e: React.MouseEvent<HTMLDivElement>, id: string) => {
+    // Capture position before hiding anything
+    const rect = e.currentTarget.getBoundingClientRect();
+    setClickedButtonRect(rect);
+    setActiveButtonId(id);
     setSelectedCategory(category);
-    // setShowRobotAnimation(true); // Skipped
-    setShowSubMenu(true);
+    
+    // Start Animation Sequence
+    setShowRobotAnimation(true); // Reusing this state for "Drone Sequence"
+    
+    // After animation delay, show sub-menu OR Navigate
+    // Animation timing: 
+    // 0s: Drone appears
+    // 0.5s: Drone + Button move up
+    // 2.5s: End
+    setTimeout(() => {
+        setShowMenuGrid(false); // Hide main menu now
+        setShowRobotAnimation(false);
+        
+        if (category === 'About') {
+            navigate('/about');
+        } else {
+            setShowSubMenu(true);
+        }
+    }, 2500);
   };
 
   // Timer for Sad Animation
@@ -97,8 +150,6 @@ function Home() {
       return () => clearTimeout(timer);
     }
   }, [showWelcomeAnimation]);
-
-  // Robot Animation Timer Removed
 
   // Typewriter variants
   const sentence = {
@@ -128,6 +179,9 @@ function Home() {
     "CIVIL", "EEE", "IT", 
     "AI & DS", "AERO", "BIO-MED"
   ];
+  
+  // Fly Away Animation Variants
+  // Fly Away Animation Logic handled inside MenuGridItem component directly.
 
   return (
     <div className="landing-container">
@@ -251,45 +305,80 @@ function Home() {
         </div>
       )}
 
-      {/* Robot Animation Modal Removed */}
+      {/* Drone Animation Overlay */}
+      {showRobotAnimation && droneAnimationData && clickedButtonRect && (
+        <div 
+            style={{ 
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                zIndex: 60, // Above menu
+                pointerEvents: 'none'
+            }}
+        >
+           {/* Drone Following the Fly Path */}
+           <motion.div
+             initial={{ 
+                 top: clickedButtonRect.top - 150, // Start slightly above
+                 left: clickedButtonRect.left + (clickedButtonRect.width / 2) - 100 // Center horizontally (assuming drone width ~200px)
+             }}
+             animate={{
+                 top: -600, // Fly up
+             }}
+             transition={{
+                 duration: 2,
+                 ease: "easeInOut",
+                 delay: 0.5
+             }}
+             style={{ position: 'absolute', width: '200px', height: '200px' }}
+           >
+              <Lottie animationData={droneAnimationData} loop={true} />
+           </motion.div>
+        </div>
+      )}
 
       {/* Main Menu Grid */}
       {showMenuGrid && (
          <div className="menu-grid-container" onClick={() => setShowMenuGrid(false)}>
             <div className="menu-grid" onClick={(e) => e.stopPropagation()}>
                {/* 1st Row (4 items) */}
-               <div className="grid-item" onClick={() => handleMenuClick("BE")}><GraduationCap size={20} /> B.E</div>
-               <div className="grid-item" onClick={() => handleMenuClick("Other")}><Dumbbell size={20} /> Sports</div>
-               <div className="grid-item" onClick={() => handleMenuClick("Other")}><Trophy size={20} /> Placement</div>
-               <div className="grid-item" onClick={() => handleMenuClick("Other")}><Landmark size={20} /> M.B.A</div>
-
-               {/* 2nd Row starts */}
-               {/* Col 1 */}
-               <div className="grid-item" onClick={() => handleMenuClick("Other")}><FileText size={20} /> B.Tech</div>
+               {/* We wrap items in motion.div conditionally if they are efficient to animate, 
+                   or effectively we can just animate the specific one using ID comparison */}
                
-               {/* Center 2x2 Tile (Merged) - Spans Col 2-3, Row 2-3 */}
-               <div className="grid-item about-tile" onClick={() => navigate('/about')}>
-                  <Info size={40} strokeWidth={1.5} />
-                  <span>About</span>
-               </div>
+               <MenuGridItem id="be" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("BE", e, "be")} icon={<GraduationCap size={20} />} text="B.E" />
+               <MenuGridItem id="sports" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "sports")} icon={<Dumbbell size={20} />} text="Sports" />
+               <MenuGridItem id="placement" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "placement")} icon={<Trophy size={20} />} text="Placement" />
+               <MenuGridItem id="mba" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "mba")} icon={<Landmark size={20} />} text="M.B.A" />
+
+               {/* 2nd Row */}
+               <MenuGridItem id="btech" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "btech")} icon={<FileText size={20} />} text="B.Tech" />
+               
+               {/* Center 2x2 Tile (Merged) */}
+               <MenuGridItem 
+                   id="about" 
+                   extraClass="about-tile"
+                   activeId={activeButtonId} 
+                   onClick={(e: any) => handleMenuClick("About", e, "about")} 
+                   icon={<Info size={40} strokeWidth={1.5} />} 
+                   text={<span>About</span>} 
+               />
                
                {/* Col 4 */}
-               <div className="grid-item" onClick={() => handleMenuClick("Other")}><FileText size={20} /> M.C.A</div>
+               <MenuGridItem id="mca" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "mca")} icon={<FileText size={20} />} text="M.C.A" />
 
-               {/* 3rd Row starts */}
-               {/* Col 1 */}
-               <div className="grid-item" onClick={() => handleMenuClick("Other")}><Building2 size={20} /> B.Arch</div>
-               
-               {/* Col 2-3 taken by 'About' */}
+               {/* 3rd Row */}
+               <MenuGridItem id="barch" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "barch")} icon={<Building2 size={20} />} text="B.Arch" />
                
                {/* Col 4 */}
-               <div className="grid-item" onClick={() => handleMenuClick("Other")}><GraduationCap size={20} /> Ph.D</div>
+               <MenuGridItem id="phd" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "phd")} icon={<GraduationCap size={20} />} text="Ph.D" />
 
-               {/* 4th Row (4 items) - Reordered: Scholarship first */}
-               <div className="grid-item scholarship-pill" onClick={() => handleMenuClick("Other")}><GraduationCap size={20} /> Scholarship</div>
-               <div className="grid-item" onClick={() => handleMenuClick("Other")}><FileText size={20} /> M.E</div>
-               <div className="grid-item" onClick={() => handleMenuClick("Other")}><HomeIcon size={20} /> Hostel</div>
-               <div className="grid-item" onClick={() => handleMenuClick("Other")}><Bus size={20} /> Transport</div>
+               {/* 4th Row */}
+               <MenuGridItem id="scholarship" extraClass="scholarship-pill" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "scholarship")} icon={<GraduationCap size={20} />} text="Scholarship" />
+               <MenuGridItem id="me" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "me")} icon={<FileText size={20} />} text="M.E" />
+               <MenuGridItem id="hostel" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "hostel")} icon={<HomeIcon size={20} />} text="Hostel" />
+               <MenuGridItem id="transport" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "transport")} icon={<Bus size={20} />} text="Transport" />
             </div>
          </div>
       )}
