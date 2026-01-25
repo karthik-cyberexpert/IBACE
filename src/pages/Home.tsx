@@ -175,13 +175,48 @@ function Home() {
   
   // B.E Sub-menu items (9 items)
   const beCourses = [
-    "CSE", "ECE", "MECH", 
-    "CIVIL", "EEE", "IT", 
-    "AI & DS", "AERO", "BIO-MED"
+    "Aeronautical Engineering", "Biomedical Engineering", "Civil Engineering", 
+    "Computer Science and Engineering", "CSE (AI & ML)", "CSE (Cyber Security)", 
+    "Electrical and Electronics Engineering", "Electronics and Communication Engineering", "Electronics and Instrumentation Engineering"
+  ];
+
+  // B.Tech Programs (6 items)
+  const bTechCourses = [
+    "Artificial Intelligence and Data Science", "Biotechnology", "Chemical Engineering",
+    "Computer Science and Business Systems", "Information Technology", "Architecture (B.Arch.)"
+  ];
+
+  // M.E Programs (5 items)
+  const meCourses = [
+    "Communication Systems", "Computer Science and Engineering", 
+    "Engineering Design", "Power Systems Engineering", "Structural Engineering"
+  ];
+
+  // MBA & MCA Programs (4 items)
+  const mbaMcaCourses = [
+    "MBA Full Time", "MBA Part Time", 
+    "MBA – Logistics and Supply Chain Management", "MCA"
+  ];
+
+  // Ph.D Programs (5 items)
+  const phdCourses = [
+    "Computer Science and Engineering", "Electronics and Communication Engineering",
+    "Mechanical Engineering", "Civil Engineering", "Physics"
   ];
   
-  // Fly Away Animation Variants
-  // Fly Away Animation Logic handled inside MenuGridItem component directly.
+  // Helper to get current items
+  const getSubMenuItems = () => {
+      switch(selectedCategory) {
+          case 'BE': return beCourses;
+          case 'BTech': return bTechCourses;
+          case 'ME': return meCourses;
+          case 'MBA_MCA': return mbaMcaCourses;
+          case 'PhD': return phdCourses;
+          default: return [];
+      }
+  };
+
+  const subMenuItems = getSubMenuItems();
 
   return (
     <div className="landing-container">
@@ -350,10 +385,10 @@ function Home() {
                <MenuGridItem id="be" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("BE", e, "be")} icon={<GraduationCap size={20} />} text="B.E" />
                <MenuGridItem id="sports" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "sports")} icon={<Dumbbell size={20} />} text="Sports" />
                <MenuGridItem id="placement" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "placement")} icon={<Trophy size={20} />} text="Placement" />
-               <MenuGridItem id="mba" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "mba")} icon={<Landmark size={20} />} text="M.B.A" />
+               <MenuGridItem id="mba" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("MBA_MCA", e, "mba")} icon={<Landmark size={20} />} text="M.B.A" />
 
                {/* 2nd Row */}
-               <MenuGridItem id="btech" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "btech")} icon={<FileText size={20} />} text="B.Tech" />
+               <MenuGridItem id="btech" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("BTech", e, "btech")} icon={<FileText size={20} />} text="B.Tech" />
                
                {/* Center 2x2 Tile (Merged) */}
                <MenuGridItem 
@@ -366,30 +401,30 @@ function Home() {
                />
                
                {/* Col 4 */}
-               <MenuGridItem id="mca" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "mca")} icon={<FileText size={20} />} text="M.C.A" />
+               <MenuGridItem id="mca" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("MBA_MCA", e, "mca")} icon={<FileText size={20} />} text="M.C.A" />
 
                {/* 3rd Row */}
-               <MenuGridItem id="barch" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "barch")} icon={<Building2 size={20} />} text="B.Arch" />
+               <MenuGridItem id="barch" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("BTech", e, "barch")} icon={<Building2 size={20} />} text="B.Arch" />
                
                {/* Col 4 */}
-               <MenuGridItem id="phd" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "phd")} icon={<GraduationCap size={20} />} text="Ph.D" />
+               <MenuGridItem id="phd" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("PhD", e, "phd")} icon={<GraduationCap size={20} />} text="Ph.D" />
 
                {/* 4th Row */}
                <MenuGridItem id="scholarship" extraClass="scholarship-pill" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "scholarship")} icon={<GraduationCap size={20} />} text="Scholarship" />
-               <MenuGridItem id="me" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "me")} icon={<FileText size={20} />} text="M.E" />
+               <MenuGridItem id="me" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("ME", e, "me")} icon={<FileText size={20} />} text="M.E" />
                <MenuGridItem id="hostel" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "hostel")} icon={<HomeIcon size={20} />} text="Hostel" />
                <MenuGridItem id="transport" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "transport")} icon={<Bus size={20} />} text="Transport" />
             </div>
          </div>
       )}
 
-      {/* Sub Menu Grid (3x3 for B.E) */}
+      {/* Sub Menu Grid */}
       {showSubMenu && (
          <div className="menu-grid-container" onClick={() => setShowSubMenu(false)}>
             <div className="submenu-grid" onClick={(e) => e.stopPropagation()}>
-                {selectedCategory === 'BE' ? (
+                {subMenuItems.length > 0 ? (
                    <>
-                     {beCourses.map((course) => (
+                     {subMenuItems.map((course) => (
                        <div key={course} className="grid-item">
                           <GraduationCap size={20} /> {course}
                        </div>
