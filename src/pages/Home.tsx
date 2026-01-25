@@ -11,7 +11,10 @@ import {
   Bus, 
   Home as HomeIcon, 
   Info,
-  Dumbbell
+  Dumbbell,
+  ArrowLeft,
+  ArrowRight,
+  House
 } from 'lucide-react';
 
 // Helper Component for Menu Items to handle shared Animation Logic
@@ -199,6 +202,64 @@ function Home() {
     }, 2500);
   };
 
+  // History State
+  // 0: Landing, 1: Main Menu, 2: Sub Menu
+  const [navLevel, setNavLevel] = useState(0); 
+  const [lastMaxLevel, setLastMaxLevel] = useState(0); // Track how deep we went to enable 'Forward'
+
+  // Sync navLevel with logic
+  useEffect(() => {
+      if (showSubMenu) {
+          setNavLevel(2);
+          setLastMaxLevel(2);
+      } else if (showMenuGrid) {
+          setNavLevel(1);
+          if (lastMaxLevel < 1) setLastMaxLevel(1);
+      } else {
+          setNavLevel(0);
+      }
+  }, [showMenuGrid, showSubMenu]);
+
+  const handleBack = () => {
+      // Clear active animation state so it doesn't replay
+      setActiveButtonId(null);
+      setClickedButtonRect(null);
+
+      if (navLevel === 2) {
+          // Sub -> Main
+          setShowSubMenu(false);
+          setShowMenuGrid(true);
+      } else if (navLevel === 1) {
+          // Main -> Home
+          setShowMenuGrid(false);
+      }
+  };
+
+  const handleHome = () => {
+      setActiveButtonId(null);
+      setClickedButtonRect(null);
+      setShowSubMenu(false);
+      setShowMenuGrid(false);
+      setIsFormOpen(false);
+      setShowSadAnimation(false);
+      setShowWelcomeAnimation(false);
+      setShowRobotAnimation(false);
+  };
+
+  const handleForward = () => {
+      if (navLevel === 0 && lastMaxLevel >= 1) {
+          // Home -> Main
+          setShowMenuGrid(true);
+      } else if (navLevel === 1 && lastMaxLevel === 2) {
+          // Main -> Sub (Restore previous sub-menu if possible, or just open if context exists)
+          // For simplicity, we only allow forward if we know what to show.
+          if (selectedCategory) {
+              setShowMenuGrid(false);
+              setShowSubMenu(true);
+          }
+      }
+  };
+
   // Timer for Sad Animation
   useEffect(() => {
     if (showSadAnimation) {
@@ -209,6 +270,17 @@ function Home() {
       return () => clearTimeout(timer);
     }
   }, [showSadAnimation]);
+
+  // Timer for Welcome Animation
+  useEffect(() => {
+    if (showWelcomeAnimation) {
+      const timer = setTimeout(() => {
+        setShowWelcomeAnimation(false);
+        setShowMenuGrid(true); 
+      }, 3000); 
+      return () => clearTimeout(timer);
+    }
+  }, [showWelcomeAnimation]);
 
   // Timer for Welcome Animation
   useEffect(() => {
@@ -510,6 +582,17 @@ function Home() {
          </div>
       )}
       
+      {/* Navigation Dock - Visible when any menu is open */}
+      {(showMenuGrid || showSubMenu) && (
+          <NavigationDock 
+             onBack={handleBack} 
+             onHome={handleHome} 
+             onForward={handleForward}
+             canGoBack={navLevel > 0}
+             canGoForward={navLevel < lastMaxLevel && (navLevel === 0 || (navLevel === 1 && selectedCategory !== null))}
+          />
+      )}
+
       {/* Menu Button */}
       {!isFormOpen && !showMenuGrid && !showSadAnimation && !showWelcomeAnimation && !showSubMenu && (
         <div className="menu-btn-container">
@@ -523,5 +606,32 @@ function Home() {
     </div>
   )
 }
+
+// Helper Component for Navigation Controls
+const NavigationDock = ({ onBack, onHome, onForward, canGoBack, canGoForward }: any) => {
+    return (
+        <div className="nav-dock">
+            <button 
+                className={`nav-icon-btn ${!canGoBack ? 'disabled' : ''}`} 
+                onClick={onBack}
+                disabled={!canGoBack}
+            >
+                <ArrowLeft size={24} />
+            </button>
+            
+            <button className="nav-icon-btn" onClick={onHome}>
+                <House size={24} />
+            </button>
+            
+            <button 
+                className={`nav-icon-btn ${!canGoForward ? 'disabled' : ''}`} 
+                onClick={onForward}
+                disabled={!canGoForward}
+            >
+                <ArrowRight size={24} />
+            </button>
+        </div>
+    );
+};
 
 export default Home;
