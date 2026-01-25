@@ -125,7 +125,7 @@ function Home() {
 
   const [showRobotAnimation, setShowRobotAnimation] = useState(false); // Using this for Drone animation state now
   const [droneAnimationData, setDroneAnimationData] = useState<any>(null);
-  
+
   const [clickedButtonRect, setClickedButtonRect] = useState<DOMRect | null>(null);
   const [activeButtonId, setActiveButtonId] = useState<string | null>(null);
 
@@ -379,10 +379,19 @@ function Home() {
         </div>
       </header>
 
-      {/* Enquiry Form Modal */}
+      {/* Enquiry Form Modal - Emerging Animation */}
       {isFormOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content">
+        <div className="modal-overlay" style={{ zIndex: 70 }}>
+          <motion.div 
+            className="modal-content"
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ 
+                duration: 0.5,
+                ease: "easeOut"
+            }}
+          >
             <button className="close-btn" onClick={handleFormClose}>×</button>
             <h2 className="form-title">Enquiry Form</h2>
             <form onSubmit={(e) => { e.preventDefault(); handleFormSubmit(); }}>
@@ -400,7 +409,7 @@ function Home() {
               </div>
               <button type="submit" className="submit-btn">Submit</button>
             </form>
-          </div>
+          </motion.div>
         </div>
       )}
 
