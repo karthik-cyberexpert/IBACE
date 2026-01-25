@@ -563,9 +563,9 @@ function Home() {
 
                {/* 4th Row */}
                <MenuGridItem id="me" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("ME", e, "me")} icon={<FileText size={20} />} text="M.E" />
-               <MenuGridItem id="scholarship" extraClass="scholarship-pill" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "scholarship")} icon={<GraduationCap size={20} />} text="Scholarship" />
-               <MenuGridItem id="hostel" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "hostel")} icon={<HomeIcon size={20} />} text="Hostel" />
                <MenuGridItem id="transport" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "transport")} icon={<Bus size={20} />} text="Transport" />
+               <MenuGridItem id="hostel" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "hostel")} icon={<HomeIcon size={20} />} text="Hostel" />
+               <MenuGridItem id="scholarship" extraClass="scholarship-pill" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "scholarship")} icon={<GraduationCap size={20} />} text="Scholarship" />
             </div>
          </div>
       )}
