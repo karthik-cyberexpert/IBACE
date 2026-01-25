@@ -374,8 +374,8 @@ function Home() {
           </div>
         </div>
         <div className="header-text">
-          <h1 className="school-name">Meridian College</h1>
-          <p className="school-motto">Est. 1885 • Excellence in Education</p>
+          <h1 className="school-name">Adhiyamaan College of Engineering</h1>
+          <p className="school-motto">Est. 1985 • Excellence in Education</p>
         </div>
       </header>
 
@@ -560,9 +560,10 @@ function Home() {
                {/* Col 4 */}
                <MenuGridItem id="phd" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("PhD", e, "phd")} icon={<GraduationCap size={20} />} text="Ph.D" />
 
+
                {/* 4th Row */}
-               <MenuGridItem id="scholarship" extraClass="scholarship-pill" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "scholarship")} icon={<GraduationCap size={20} />} text="Scholarship" />
                <MenuGridItem id="me" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("ME", e, "me")} icon={<FileText size={20} />} text="M.E" />
+               <MenuGridItem id="scholarship" extraClass="scholarship-pill" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "scholarship")} icon={<GraduationCap size={20} />} text="Scholarship" />
                <MenuGridItem id="hostel" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "hostel")} icon={<HomeIcon size={20} />} text="Hostel" />
                <MenuGridItem id="transport" activeId={activeButtonId} onClick={(e: any) => handleMenuClick("Other", e, "transport")} icon={<Bus size={20} />} text="Transport" />
             </div>
