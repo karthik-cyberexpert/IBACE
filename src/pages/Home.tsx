@@ -41,7 +41,77 @@ const MenuGridItem = ({ id, activeId, onClick, icon, text, extraClass = "" }: an
     );
 };
 
+// Helper Component for Sub-Menu Items (Drone Drop Animation)
+const DroneDropItem = ({ children, delay = 0 }: any) => {
+    const [droneData, setDroneData] = useState<any>(null);
+    const [showDrone, setShowDrone] = useState(true);
+
+    useEffect(() => {
+        fetch('/assets/drone_fly.json')
+           .then(res => res.json())
+           .then(data => setDroneData(data));
+        
+        // Hide drone after drop + fly away sequence
+        // Sequence: 
+        // 0s-1.5s: Drop
+        // 1.5s: Land
+        // 1.5s-2.5s: Fly away
+        const timer = setTimeout(() => {
+            setShowDrone(false);
+        }, 3000);
+        return () => clearTimeout(timer);
+    }, []);
+
+    return (
+        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+            {/* The Button Content - Animates Down */}
+            <motion.div
+                initial={{ y: -800, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ 
+                    duration: 1.5, 
+                    ease: "easeOut", 
+                    delay: delay 
+                }}
+                style={{ width: '100%', height: '100%' }}
+            >
+                {children}
+            </motion.div>
+
+            {/* The Drone Overlay - Follows the button then flies away */}
+            {showDrone && droneData && (
+                <motion.div
+                    initial={{ y: -900, opacity: 1, scale: 0.8 }} // Start slightly above button
+                    animate={{ 
+                        y: [ -900, -100, -100, -900 ], // Drop -> Stay -> Fly Up
+                        opacity: [ 1, 1, 1, 0 ]
+                    }}
+                    transition={{
+                        duration: 3,
+                        times: [0, 0.5, 0.7, 1], // Keyframe timings
+                        ease: "easeInOut",
+                        delay: delay
+                    }}
+                    style={{ 
+                        position: 'absolute', 
+                        top: '-60px', // Offset relative to the button
+                        left: '50%', 
+                        marginLeft: '-75px', // Center (assuming width 150)
+                        width: '150px', 
+                        height: '150px', 
+                        pointerEvents: 'none',
+                        zIndex: 10
+                    }}
+                >
+                    <Lottie animationData={droneData} loop={true} />
+                </motion.div>
+            )}
+        </div>
+    );
+};
+
 function Home() {
+// ... existing Home component code ...
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [showMenuGrid, setShowMenuGrid] = useState(false);
   const [showSadAnimation, setShowSadAnimation] = useState(false);
@@ -424,10 +494,12 @@ function Home() {
             <div className="submenu-grid" onClick={(e) => e.stopPropagation()}>
                 {subMenuItems.length > 0 ? (
                    <>
-                     {subMenuItems.map((course) => (
-                       <div key={course} className="grid-item">
-                          <GraduationCap size={20} /> {course}
-                       </div>
+                     {subMenuItems.map((course, index) => (
+                       <DroneDropItem key={course} delay={index * 0.1}>
+                           <div className="grid-item">
+                              <GraduationCap size={20} /> {course}
+                           </div>
+                       </DroneDropItem>
                      ))}
                    </>
                 ) : (
