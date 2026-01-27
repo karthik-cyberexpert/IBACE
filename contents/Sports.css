@@ -1,0 +1,140 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* PAGE + BACKGROUND */
+.sports-page {
+    height: 100vh;
+    padding: 0px;
+    margin-bottom: 20px;
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)),
+        url("/images/sports.jpg") center / cover no-repeat;
+}
+
+/* TITLE */
+.sports-title {
+    text-align: center;
+    font-size: 36px;
+    color: #ffffff;
+    margin-bottom: 15px;
+    text-shadow: 0 0 15px rgba(56, 189, 248, 0.8);
+}
+
+/* LAYOUT */
+.sports-layout {
+    display: grid;
+    grid-template-columns: 1fr 2.6fr 1fr;
+    gap: 30px;
+    height: calc(100vh - 100px);
+}
+
+/* GLASS BOX */
+.glass-box {
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(14px);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
+    overflow: hidden;
+    position: relative;
+}
+
+/* HEADINGS */
+.glass-box h2 {
+    text-align: center;
+    color: #0369a1;
+    margin-bottom: 18px;
+}
+
+/* GAME CARDS */
+.game-card {
+    background: rgba(255, 255, 255, 0.65);
+    padding: 12px;
+    margin: 8px 0;
+    border-left: 4px solid #38bdf8;
+    border-radius: 6px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* HOVER */
+.game-card:hover {
+    transform: translateX(8px) scale(1.03);
+    box-shadow: 0 10px 25px rgba(56, 189, 248, 0.35);
+}
+
+/* ENTRY ANIMATION (INDOOR + OUTDOOR) */
+.animate-card {
+    opacity: 0;
+    animation: cardSlideIn 0.6s ease forwards;
+}
+
+@keyframes cardSlideIn {
+    from {
+        transform: translateY(15px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+
+/* GALLERY */
+.gallery-box {
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+    position: relative;
+    perspective: 1200px;
+}
+
+.gallery-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    backface-visibility: hidden;
+}
+
+/* FLIP */
+.gallery-image.right {
+    animation: flipFromRight 0.9s ease;
+}
+
+.gallery-image.left {
+    animation: flipFromLeft 0.9s ease;
+}
+
+@keyframes flipFromRight {
+    from {
+        transform: rotateY(90deg);
+        opacity: 0;
+    }
+
+    to {
+        transform: rotateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes flipFromLeft {
+    from {
+        transform: rotateY(-90deg);
+        opacity: 0;
+    }
+
+    to {
+        transform: rotateY(0);
+        opacity: 1;
+    }
+}

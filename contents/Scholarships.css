@@ -1,0 +1,304 @@
+/* =========================
+   PAGE BASE
+========================= */
+
+.sch-page {
+    max-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* =========================
+   BACKGROUND
+========================= */
+
+.bg-img {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+}
+
+/* =========================
+   GLASS EFFECT
+========================= */
+
+.glass {
+    width: 97%;
+    margin: 0;
+    background: rgba(255, 255, 255, 0.523);
+    backdrop-filter: blur(14px);
+    border-radius: 20px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.sch-header {
+    text-align: center;
+    padding: 60px 20px 30px;
+}
+
+.typing {
+    font-size: 52px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.typing span {
+    display: inline-block;
+    opacity: 0;
+    animation: letterIn 0.6s forwards;
+    animation-delay: var(--delay);
+}
+
+@keyframes letterIn {
+    from {
+        transform: translateY(-25px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.sch-navbar {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    padding: 16px;
+    margin: 0 20px;
+}
+
+.nav-btn {
+    padding: 14px 26px;
+    border: none;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.2);
+    color: rgb(16, 15, 15);
+    font-size: 15px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.35s ease;
+    
+}
+
+.nav-btn:hover {
+    background: rgba(140, 134, 134, 0.35);
+}
+
+ .nav-btn.active {
+     position: relative;
+     background: linear-gradient(135deg, #2563eb, #60a5fa);
+     animation: glowPulse 2s infinite ease-in-out;
+ }
+
+ .nav-btn.active::after {
+     content: "";
+     position: absolute;
+     inset: -2px;
+     border-radius: inherit;
+     background: linear-gradient(135deg, #60a5fa, #2563eb);
+     filter: blur(10px);
+     z-index: -1;
+ }
+
+/* TRAIN EFFECT */
+.nav-btn.train::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg,
+            transparent,
+            rgba(125, 81, 81, 0.5),
+            transparent);
+    animation: trainMove 1.5s ease forwards;
+}
+
+@keyframes trainMove {
+    from {
+        transform: translateX(-120%);
+    }
+
+    to {
+        transform: translateX(120%);
+    }
+}
+
+/* =========================
+   CONTENT AREA
+========================= */
+
+.sch-content {
+    padding: 40px 20px 120px;
+    max-width: 1100px;
+    margin: auto;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.sch-card {
+    padding: 26px 30px;
+    margin-bottom: 22px;
+    color: #0f172a;
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+/* =========================
+   SLIDE ANIMATIONS
+========================= */
+
+.slide-left {
+    opacity: 0;
+    transform: translateX(-40px);
+    animation: slideIn 0.6s ease forwards;
+}
+
+.delay-1 {
+    animation-delay: 0.1s;
+}
+
+.delay-2 {
+    animation-delay: 0.2s;
+}
+
+.delay-3 {
+    animation-delay: 0.3s;
+}
+
+.delay-4 {
+    animation-delay: 0.4s;
+}
+
+.delay-5 {
+    animation-delay: 0.5s;
+}
+
+@keyframes slideIn {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.scholarship-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.scholarship-table th,
+.scholarship-table td {
+    padding: 14px 16px;
+    text-align: left;
+}
+
+.scholarship-table th {
+    background: #1e3a8a;
+    color: white;
+}
+
+.scholarship-table tr:nth-child(even) {
+    background: #f1f5f9;
+}
+
+.scholarship-table tr:hover {
+    background: #e0e7ff;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+    .typing {
+        font-size: 36px;
+    }
+
+    .sch-navbar {
+        flex-wrap: wrap;
+    }
+
+    .nav-btn {
+        padding: 10px 18px;
+    }
+}
+
+.sch-nav {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin: 20px 0;
+}
+
+.sch-nav-btn {
+    padding: 12px 22px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    background: #e5e7eb;
+    font-weight: 600;
+}
+
+.sch-nav-btn.active {
+    background: #2563eb;
+    color: white;
+}
+
+.sch-section {
+    max-width: 900px;
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+}
+
+.sch-section h2 {
+    margin-bottom: 14px;
+}
+
+.sch-section ul,
+.sch-section ol {
+    padding-left: 20px;
+}
+
+.floating-menu-btn {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    box-shadow: 0 0 25px rgba(37, 99, 235, 0.9);
+    animation: floatBtn 2.8s ease-in-out infinite;
+}
+
+.floating-menu-btn img {
+    width: 64px;
+    height: 64px;
+}

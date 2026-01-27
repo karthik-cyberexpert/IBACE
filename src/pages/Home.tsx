@@ -196,6 +196,8 @@ function Home() {
         
         if (category === 'About') {
             navigate('/about');
+        } else if (id === 'transport') {
+            navigate('/transport');
         } else {
             setShowSubMenu(true);
         }

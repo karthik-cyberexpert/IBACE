@@ -1,0 +1,217 @@
+/* =====================
+   PAGE
+   ===================== */
+.placement-page {
+    height: 100vh;
+    width: 100%;
+    padding: 20px;
+    background:
+            linear-gradient(rgba(0, 0, 0, 0.25),
+                rgba(0, 0, 0, 0.25)),
+            url("/images/placement.jpg") center / cover no-repeat;
+    overflow: hidden;
+}
+
+/* =====================
+   HEADING
+   ===================== */
+.heading {
+    font-size: 60px;
+    font-weight: 700;
+    text-align: center;
+    color: #eff1f4;
+    margin: 0 auto 20px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: textReveal 0.8s ease-out forwards;
+}
+
+.heading::after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #007bff, #00c6ff);
+    margin: 10px auto 0;
+    border-radius: 2px;
+    animation: underlineGrow 0.8s ease-out forwards;
+    animation-delay: 0.5s;
+}
+
+/* =====================
+   TOP SECTION
+   ===================== */
+.top-section {
+    display: flex;
+    gap: 3%;
+    width:97%
+}
+
+/* CARD */
+.top-box {
+    flex: 1;
+    padding: 10px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transform: scale(0.9);
+    animation: zoomIn 0.7s ease-out forwards;
+}
+
+.top-box:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+/* GRAPH ANIMATION */
+
+
+/* =====================
+   IMAGE
+   ===================== */
+.mosaic-wrapper {
+    height: 300px;
+    width:600px;
+    margin-left: 60px;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.mosaic-next {
+    width: 80%;
+    height: 80%;
+    object-fit: cover;
+}
+
+/* =====================
+   LOGOS
+   ===================== */
+.logos-wrapper {
+    margin-top: 30px;
+    overflow: hidden;
+}
+
+.logo-row {
+    width: 100%;
+    overflow: hidden;
+    margin: 12px 0;
+}
+
+.logo-track {
+    display: flex;
+    gap: 40px;
+    width: max-content;
+    will-change: transform;
+}
+
+.logo-box {
+    width: 160px;
+    height: 60px;
+    background: #ffffff;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-box img {
+    width: 120px;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* MARQUEE */
+.left-to-right .logo-track {
+    animation: marqueeLTR 50s linear infinite;
+}
+
+.right-to-left .logo-track {
+    animation: marqueeRTL 50s linear infinite;
+}
+
+/* PAUSE ON HOVER */
+.logo-row:hover .logo-track {
+    animation-play-state: paused;
+}
+
+/* =====================
+   KEYFRAMES
+   ===================== */
+@keyframes marqueeLTR {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes marqueeRTL {
+    from {
+        transform: translateX(-50%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes zoomIn {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes textReveal {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes underlineGrow {
+    to {
+        width: 80px;
+    }
+}
+
+@keyframes graphFloatIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes graphFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+/* =====================
+   RESPONSIVE
+   ===================== */
+@media (max-width: 768px) {
+    .top-section {
+        flex-direction: column;
+    }
+
+    .mosaic-wrapper {
+        height: 220px;
+    }
+}
