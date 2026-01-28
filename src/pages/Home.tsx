@@ -194,10 +194,22 @@ function Home() {
         setShowMenuGrid(false); // Hide main menu now
         setShowRobotAnimation(false);
         
+        // Navigation Map
+        const routes: { [key: string]: string } = {
+            'about': '/about',
+            'transport': '/transport',
+            'hostel': '/hostel',
+            'mba': '/mba',
+            'mca': '/mca',
+            'placement': '/placement',
+            'scholarship': '/scholarships',
+            'sports': '/sports'
+        };
+
         if (category === 'About') {
             navigate('/about');
-        } else if (id === 'transport') {
-            navigate('/transport');
+        } else if (routes[id]) {
+            navigate(routes[id]);
         } else {
             setShowSubMenu(true);
         }

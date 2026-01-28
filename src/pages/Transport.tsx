@@ -16,53 +16,123 @@ const Transport = () => {
     "Berigai", "Krishnagiri", "Basthi", "Ashok Leyland"
   ];
 
-  const RouteList = ({ routes, align }: { routes: string[], align: 'left' | 'right' }) => (
+  // Animation Constants
+  const ANIMATION_DURATION = 2.5; // Seconds for the bus to travel full height
+
+  const RouteList = ({ routes, align }: { routes: string[], align: 'left' | 'right' }) => {
+     // For Right alignment (Bus goes Bottom -> Top), we crave the cards revealing from Bottom -> Top.
+     // So the last item (bottom most) should have the smallest delay.
+     // For Left alignment (Bus goes Top -> Bottom), the first item (top most) has smallest delay.
+     
+     const totalItems = routes.length;
+     const stepDuration = ANIMATION_DURATION / totalItems;
+
+    return (
     <div style={{
+      position: 'relative',
       display: 'flex',
       flexDirection: 'column',
-      gap: '8px', // Reduced gap for compactness
+      gap: '8px', 
       width: '100%',
       padding: '0 20px',
-      marginTop: '10px' // Slight top margin
+      marginTop: '10px'
     }}>
-      {routes.map((route, index) => (
-        <motion.div 
-          key={route}
-          initial={{ opacity: 0, x: align === 'left' ? -20 : 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: index * 0.05 }} // Faster stagger
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: align === 'left' ? 'flex-start' : 'flex-end',
-            gap: '8px',
-            color: '#fff',
-            fontFamily: "'Inter', sans-serif",
-            fontSize: '0.85rem', // Smaller text
-            fontWeight: 500,
-            background: 'rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(5px)',
-            padding: '8px 16px', // Compact padding
-            borderRadius: '10px',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-            width: '100%',
-            cursor: 'default',
-            margin: '0' // Removed extra margin
-          }}
-          whileHover={{
-            scale: 1.02,
-            background: 'rgba(255, 255, 255, 0.2)',
-            borderColor: 'rgba(255, 255, 255, 0.3)'
-          }}
-        >
-          {align === 'left' && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#3b82f6', boxShadow: '0 0 8px #3b82f6', flexShrink: 0 }}></div>}
-          <span style={{ flex: 1, textAlign: align }}>{route}</span>
-          {align === 'right' && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#3b82f6', boxShadow: '0 0 8px #3b82f6', flexShrink: 0 }}></div>}
-        </motion.div>
-      ))}
+      {/* The Bus - Relative to this container to track items easily */}
+      <motion.img 
+        src="/assets/bus.png"
+        initial={{ 
+            top: align === 'left' ? '-10%' : '110%', 
+            opacity: 1,
+            rotate: align === 'left' ? 180 : 0 
+        }}
+        animate={{ 
+            top: align === 'left' ? '110%' : '-10%'
+        }}
+        transition={{ 
+            duration: ANIMATION_DURATION, 
+            ease: "linear",
+            repeat: Infinity,
+            repeatDelay: 1
+        }}
+        style={{
+            position: 'absolute',
+            left: '50%', // Center horizontally
+            translateX: '-50%', // Centering transform
+            width: '60px',
+            height: 'auto',
+            zIndex: 20,
+            filter: 'drop-shadow(0 0 10px rgba(59, 130, 246, 0.5))',
+            mixBlendMode: 'screen', // Removes black background
+            // Simple rotation + centering adjustment
+             transform: `translateX(-50%) ${align === 'left' ? 'rotate(180deg)' : 'rotate(0deg)'}`
+        }}
+      />
+
+      {routes.map((route, index) => {
+        // Calculate Delay
+        let delay = 0;
+        if (align === 'left') {
+            // Top -> Bottom: Index 0 is first
+            delay = index * stepDuration;
+        } else {
+            // Bottom -> Top: Last Index is first
+            // index 0 (top) needs to wait for bus to reach top
+            // index N (bottom) changes immediately
+            delay = (totalItems - 1 - index) * stepDuration;
+        }
+
+        return (
+            <motion.div 
+            key={route}
+            initial={{ opacity: 0, x: align === 'left' ? -50 : 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ 
+                duration: 0.5,
+                delay: delay,
+                repeat: Infinity,
+                repeatDelay: (ANIMATION_DURATION + 1) - 0.5 // Loop sync
+                // Actually, looping staggered animations is tricky.
+                // Let's just run it once perfectly first.
+                // User said "make a animation", usually implies distinct entry.
+                // To make it loop with the bus:
+                // We'd need keyframes: 0 -> 1 -> 0 (reset)
+            }}
+            // Standard "One-shot" reveal for now, or Loop?
+            // "make a animation... looks like the bus pulls and places"
+            // Let's make it loop so user sees it constantly.
+            style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: align === 'left' ? 'flex-start' : 'flex-end',
+                gap: '8px',
+                color: '#fff',
+                fontFamily: "'Inter', sans-serif",
+                fontSize: '0.85rem',
+                fontWeight: 500,
+                background: 'rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'blur(5px)',
+                padding: '8px 16px',
+                borderRadius: '10px',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                width: '100%',
+                cursor: 'default',
+                margin: '0'
+            }}
+            whileHover={{
+                scale: 1.02,
+                background: 'rgba(255, 255, 255, 0.2)',
+                borderColor: 'rgba(255, 255, 255, 0.3)'
+            }}
+            >
+            {align === 'left' && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#3b82f6', boxShadow: '0 0 8px #3b82f6', flexShrink: 0 }}></div>}
+            <span style={{ flex: 1, textAlign: align }}>{route}</span>
+            {align === 'right' && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#3b82f6', boxShadow: '0 0 8px #3b82f6', flexShrink: 0 }}></div>}
+            </motion.div>
+        );
+      })}
     </div>
-  );
+  )};
 
   return (
     <div className="transport-page" style={{

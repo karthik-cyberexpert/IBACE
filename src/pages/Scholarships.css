@@ -1,0 +1,395 @@
+/* ===============================
+   SCHOLARSHIPS PAGE
+   =============================== */
+.sch-page {
+    height: 100vh;
+    width: 100vw;
+    font-family: "Poppins", sans-serif;
+    position: relative;
+    overflow: hidden;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+  
+/* BACKGROUND IMAGE */
+.bg-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    filter: brightness(0.4); /* Darker for better contrast */
+}
+  
+/* ===============================
+    HEADER
+    =============================== */
+.sch-header {
+    margin: 20px auto 10px;
+    padding: 20px 40px;
+    width: 90%;
+    max-width: 1000px;
+    text-align: center;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    /* Glass Effect */
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    flex-shrink: 0;
+}
+  
+/* TYPING EFFECT (Title) */
+.typing span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: typeIn 0.8s ease forwards;
+    animation-delay: var(--delay);
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, #60a5fa, #c084fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+  
+@keyframes typeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+}
+  
+/* ===============================
+    NAVBAR
+    =============================== */
+.sch-navbar {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+  
+.nav-btn {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0;
+    animation: fadeInBtns 0.6s ease forwards;
+}
+  
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+}
+  
+/* ACTIVE STATE */
+.nav-btn.active {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+}
+  
+.nav-btn.train {
+    animation: bounceSelect 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+  
+@keyframes fadeInBtns {
+    to { opacity: 1; }
+}
+  
+@keyframes bounceSelect {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+  
+/* ===============================
+    CONTENT AREA
+    =============================== */
+.sch-content {
+    width: 90%;
+    max-width: 1000px;
+    margin: 20px auto 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-bottom: 80px; /* Space for MenuButton */
+    flex: 1;
+    overflow-y: auto; /* Internal scrolling */
+    
+    /* Scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.5) rgba(0, 0, 0, 0.1);
+}
+
+.sch-content::-webkit-scrollbar {
+    width: 6px;
+}
+.sch-content::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 3px;
+}
+  
+/* CARD STYLING (Glass) */
+.sch-card {
+    padding: 20px 30px;
+    border-radius: 16px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    font-size: 1rem;
+    line-height: 1.6;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    
+    /* Animation Start State */
+    opacity: 0;
+    transform: translateX(-50px);
+    animation: slideInLeft 0.6s ease forwards;
+}
+  
+/* STAGGERED DELAYS */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+  
+@keyframes slideInLeft {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+}
+  
+/* TABLE STYLING */
+.scholarship-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: white;
+}
+  
+.scholarship-table th, 
+.scholarship-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+  
+.scholarship-table th {
+    font-size: 1.1rem;
+    color: #60a5fa;
+    text-transform: uppercase;
+}
+  
+.scholarship-table tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+  
+  /* ===============================
+     HEADER
+     =============================== */
+  .sch-header {
+    margin: 40px auto 20px;
+    padding: 30px;
+    width: 90%;
+    max-width: 1000px;
+    text-align: center;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    /* Glass Effect */
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* TYPING EFFECT (Title) */
+  .typing span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: typeIn 0.8s ease forwards;
+    animation-delay: var(--delay);
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, #60a5fa, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  @keyframes typeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* ===============================
+     NAVBAR
+     =============================== */
+  .sch-navbar {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  
+  .nav-btn {
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0;
+    animation: fadeInBtns 0.6s ease forwards;
+  }
+  
+  .nav-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+  }
+  
+  /* ACTIVE STATE */
+  .nav-btn.active {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+  }
+  
+  /* TRAIN EFFECT (optional visual cue) */
+  .nav-btn.train {
+    animation: bounceSelect 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
+  @keyframes fadeInBtns {
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes bounceSelect {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+  
+  /* ===============================
+     CONTENT AREA
+     =============================== */
+  .sch-content {
+    width: 85%;
+    max-width: 900px;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 100px;
+  }
+  
+  /* CARD STYLING (Glass) */
+  .sch-card {
+    padding: 20px 30px;
+    border-radius: 16px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    
+    /* Animation Start State */
+    opacity: 0;
+    transform: translateX(-50px);
+    animation: slideInLeft 0.6s ease forwards;
+  }
+  
+  /* STAGGERED DELAYS */
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.3s; }
+  .delay-4 { animation-delay: 0.4s; }
+  .delay-5 { animation-delay: 0.5s; }
+  
+  @keyframes slideInLeft {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  /* TABLE STYLING */
+  .scholarship-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: white;
+  }
+  
+  .scholarship-table th, 
+  .scholarship-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .scholarship-table th {
+    font-size: 1.2rem;
+    color: #60a5fa;
+    text-transform: uppercase;
+  }
+  
+  .scholarship-table tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  /* ===============================
+     FLOATING MENU BUTTON
+     =============================== */
+  .floating-menu-btn {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    width: 70px;
+    height: 70px;
+    border-radius: 20px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    box-shadow: 0 0 25px rgba(37, 99, 235, 0.5);
+    transition: transform 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .floating-menu-btn:hover {
+    transform: rotate(15deg) scale(1.1);
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  .floating-menu-btn img {
+    width: 40px;
+    height: 40px;
+  }

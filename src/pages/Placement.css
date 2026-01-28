@@ -1,0 +1,353 @@
+/* ===============================
+   PLACEMENT PAGE
+   =============================== */
+   .placement-page {
+    height: 100vh;
+    width: 100vw;
+    background: #fdfdfd;
+    padding: 20px;
+    font-family: "Poppins", sans-serif;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden; /* Prevent page scroll */
+  }
+  
+  /* HEADING */
+  .heading {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 10px 0 20px;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #2563eb, #9333ea);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
+    flex-shrink: 0;
+  }
+  
+  /* ===============================
+     TOP SECTION (Graph + Slider)
+     =============================== */
+  .top-section {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    width: 100%;
+    max-width: 1400px;
+    flex: 1; /* Take available space */
+    min-height: 0; /* Allow shrinking */
+    margin-bottom: 20px;
+  }
+  
+  .top-box {
+    flex: 1;
+    background: #ffffff;
+    border-radius: 20px;
+    /* Glass / Shadow Effect */
+    box-shadow: 
+      0 10px 30px rgba(0,0,0,0.08),
+      0 4px 6px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.05);
+    overflow: hidden;
+    position: relative;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%; /* Fill container */
+  }
+  
+  /* Graph Animation Wrapper */
+  .graph-anim-wrapper {
+    /* Using custom chart component, so minimal styling needed here besides container */
+  }
+  
+  /* Mosaic / Slider Wrapper */
+  .mosaic-wrapper {
+    width: 100%;
+    height: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  
+  /* ===============================
+     LOGOS SCROLL (Marquee)
+     =============================== */
+  .logos-wrapper {
+    width: 100%;
+    overflow: hidden;
+    padding: 15px 0 80px; /* Bottom padding for menu button */
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    flex-shrink: 0;
+  }
+  
+  .logo-row {
+    display: flex;
+    overflow: hidden;
+    margin-bottom: 15px;
+    position: relative;
+    width: 100%;
+  }
+  
+  .logo-row::before, .logo-row::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 100px;
+      height: 100%;
+      z-index: 2;
+  }
+  
+  .logo-row::before {
+      left: 0;
+      background: linear-gradient(to right, #f8fafc, transparent);
+  }
+  
+  .logo-row::after {
+      right: 0;
+      background: linear-gradient(to left, #f8fafc, transparent);
+  }
+  
+  .logo-track {
+    display: flex;
+    gap: 30px;
+    width: max-content;
+  }
+  
+  /* LOGO BOX */
+  .logo-box {
+    width: 120px;
+    height: 80px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    transition: transform 0.3s;
+  }
+  
+  .logo-box:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(37, 99, 235, 0.2);
+  }
+  
+  .logo-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: grayscale(100%);
+    transition: filter 0.3s;
+  }
+  
+  .logo-box:hover img {
+    filter: grayscale(0%);
+  }
+  
+  /* SCROLL ANIMATION */
+  .left-to-right .logo-track {
+    animation: scrollLeft 40s linear infinite;
+  }
+  
+  .right-to-left .logo-track {
+    animation: scrollRight 40s linear infinite;
+  }
+  
+  /* KEYFRAMES */
+  @keyframes scrollLeft {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  
+  @keyframes scrollRight {
+    0% { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+  }
+  
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .placement-page {
+        overflow-y: auto; /* Allow scroll on small screens */
+        height: auto;
+        min-height: 100vh;
+        display: block;
+    }
+    .top-section {
+      flex-direction: column;
+      height: auto;
+      margin-bottom: 30px;
+    }
+    .top-box {
+        height: 300px;
+        margin-bottom: 20px;
+    }
+    .heading {
+      font-size: 2rem;
+    }
+  }
+  
+  /* HEADING */
+  .heading {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 20px 0 40px;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #2563eb, #9333ea);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
+  }
+  
+  /* ===============================
+     TOP SECTION (Graph + Slider)
+     =============================== */
+  .top-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 60px;
+  }
+  
+  .top-box {
+    flex: 1;
+    min-width: 350px;
+    height: 400px;
+    background: #ffffff;
+    border-radius: 20px;
+    /* Glass / Shadow Effect */
+    box-shadow: 
+      0 10px 30px rgba(0,0,0,0.08),
+      0 4px 6px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.05);
+    overflow: hidden;
+    position: relative;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Graph Animation Wrapper */
+  .graph-anim-wrapper {
+    /* Using custom chart component, so minimal styling needed here besides container */
+  }
+  
+  /* Mosaic / Slider Wrapper */
+  .mosaic-wrapper {
+    width: 100%;
+    height: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  
+  /* ===============================
+     LOGOS SCROLL (Marquee)
+     =============================== */
+  .logos-wrapper {
+    width: 100%;
+    overflow: hidden;
+    padding: 40px 0;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+  }
+  
+  .logo-row {
+    display: flex;
+    overflow: hidden;
+    margin-bottom: 30px;
+    position: relative;
+    width: 100%;
+  }
+  
+  .logo-row::before, .logo-row::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 100px;
+      height: 100%;
+      z-index: 2;
+  }
+  
+  .logo-row::before {
+      left: 0;
+      background: linear-gradient(to right, #f8fafc, transparent);
+  }
+  
+  .logo-row::after {
+      right: 0;
+      background: linear-gradient(to left, #f8fafc, transparent);
+  }
+  
+  .logo-track {
+    display: flex;
+    gap: 40px;
+    width: max-content;
+  }
+  
+  /* LOGO BOX */
+  .logo-box {
+    width: 140px;
+    height: 90px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    transition: transform 0.3s;
+  }
+  
+  .logo-box:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(37, 99, 235, 0.2);
+  }
+  
+  .logo-box img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: grayscale(100%);
+    transition: filter 0.3s;
+  }
+  
+  .logo-box:hover img {
+    filter: grayscale(0%);
+  }
+  
+  /* SCROLL ANIMATION */
+  .left-to-right .logo-track {
+    animation: scrollLeft 40s linear infinite;
+  }
+  
+  .right-to-left .logo-track {
+    animation: scrollRight 40s linear infinite;
+  }
+  
+  /* KEYFRAMES */
+  @keyframes scrollLeft {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  
+  @keyframes scrollRight {
+    0% { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+  }
+  
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .heading {
+      font-size: 2rem;
+    }
+  }

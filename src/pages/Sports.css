@@ -1,0 +1,414 @@
+/* ===============================
+   SPORTS PAGE
+   =============================== */
+.sports-page {
+    height: 100vh;
+    width: 100vw;
+    background: #0f172a; /* Dark Slate */
+    font-family: "Poppins", sans-serif;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* No page scroll */
+  }
+  
+  /* ===============================
+     TITLE
+     =============================== */
+  .sports-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin: 15px 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #f59e0b, #ef4444);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+    animation: bounceIn 0.8s ease;
+    flex-shrink: 0;
+  }
+  
+  @keyframes bounceIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    60% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  
+  /* ===============================
+     LAYOUT GRID
+     =============================== */
+  .sports-layout {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr;
+    gap: 20px;
+    padding: 0 30px 40px; /* Bottom padding for MenuButton */
+    min-height: 0; /* Allow shrinking */
+  }
+  
+  /* GLASS BOXES (Left & Right) */
+  .glass-box {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow-y: auto; /* Internal scroll */
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    
+    /* Scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  }
+
+  .glass-box::-webkit-scrollbar { width: 6px; }
+  .glass-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 3px; }
+  
+  /* HEADINGS */
+  .glass-box h2 {
+    color: #60a5fa;
+    margin-bottom: 20px;
+    border-bottom: 2px solid rgba(96, 165, 250, 0.5);
+    padding-bottom: 10px;
+    width: 100%;
+    text-align: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  
+  /* ===============================
+     BOUNCE BALL ANIMATION
+     =============================== */
+  .bounce-ball {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    animation: bounce 1.2s infinite ease-in-out alternate;
+    flex-shrink: 0;
+  }
+  
+  .bounce-ball.blue {
+    background: radial-gradient(circle at 30% 30%, #60a5fa, #1e3a8a);
+    box-shadow: 0 0 15px #60a5fa;
+  }
+  
+  .bounce-ball.orange {
+    background: radial-gradient(circle at 30% 30%, #fbbf24, #b45309);
+    box-shadow: 0 0 15px #f59e0b;
+    animation-delay: 0.6s;
+  }
+  
+  @keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-30px); }
+  }
+  
+  /* ===============================
+     GAME CARDS
+     =============================== */
+  .game-card {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: cardEntry 0.5s ease forwards;
+    flex-shrink: 0; /* Prevent squishing */
+  }
+  
+  .game-card:hover {
+    background: #3b82f6;
+    transform: scale(1.05); /* translateX handled by animation end state */
+    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.5);
+  }
+  
+  .outdoor-box .game-card:hover {
+    background: #f59e0b;
+    box-shadow: 0 5px 15px rgba(245, 158, 11, 0.5);
+    color: black;
+  }
+  
+  @keyframes cardEntry {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  /* ===============================
+     CENTER GALLERY
+     =============================== */
+  .gallery-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1000px;
+    overflow: hidden; /* Prevent spill */
+    border-radius: 20px;
+    background: rgba(0,0,0,0.2);
+  }
+  
+  .gallery-image {
+    width: 100%;
+    max-height: 80%;
+    object-fit: contain;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    border: 5px solid rgba(255, 255, 255, 0.1);
+    
+    /* Animation Class managed by React state */
+  }
+  
+  /* Slide Animations */
+  .gallery-image.right {
+    animation: slideRight 0.8s ease forwards;
+  }
+  
+  .gallery-image.left {
+    animation: slideLeft 0.8s ease forwards;
+  }
+  
+  @keyframes slideRight {
+    from {
+      opacity: 0;
+      transform: translateX(100px) rotateY(-10deg);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) rotateY(0);
+    }
+  }
+  
+  @keyframes slideLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-100px) rotateY(10deg);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) rotateY(0);
+    }
+  }
+  
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    .sports-page {
+        overflow-y: auto;
+        height: auto;
+        min-height: 100vh;
+        display: block;
+    }
+    .sports-layout {
+      grid-template-columns: 1fr;
+      padding: 20px;
+      overflow: visible;
+    }
+    
+    .gallery-box {
+      height: 400px;
+      order: -1; /* Show image first on mobile */
+      margin-bottom: 20px;
+    }
+  }
+  
+  /* ===============================
+     TITLE
+     =============================== */
+  .sports-title {
+    text-align: center;
+    font-size: 3rem;
+    margin: 20px 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #f59e0b, #ef4444);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+    animation: bounceIn 0.8s ease;
+  }
+  
+  @keyframes bounceIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    60% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  
+  /* ===============================
+     LAYOUT GRID
+     =============================== */
+  .sports-layout {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr;
+    gap: 20px;
+    padding: 20px;
+    height: calc(100vh - 100px);
+  }
+  
+  /* GLASS BOXES (Left & Right) */
+  .glass-box {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow-y: auto;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  
+  /* HEADINGS */
+  .glass-box h2 {
+    color: #60a5fa;
+    margin-bottom: 20px;
+    border-bottom: 2px solid rgba(96, 165, 250, 0.5);
+    padding-bottom: 10px;
+    width: 100%;
+    text-align: center;
+  }
+  
+  /* ===============================
+     BOUNCE BALL ANIMATION
+     =============================== */
+  .bounce-ball {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    animation: bounce 1.2s infinite ease-in-out alternate;
+  }
+  
+  .bounce-ball.blue {
+    background: radial-gradient(circle at 30% 30%, #60a5fa, #1e3a8a);
+    box-shadow: 0 0 15px #60a5fa;
+  }
+  
+  .bounce-ball.orange {
+    background: radial-gradient(circle at 30% 30%, #fbbf24, #b45309);
+    box-shadow: 0 0 15px #f59e0b;
+    animation-delay: 0.6s;
+  }
+  
+  @keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-30px); }
+  }
+  
+  /* ===============================
+     GAME CARDS
+     =============================== */
+  .game-card {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: cardEntry 0.5s ease forwards;
+  }
+  
+  .game-card:hover {
+    background: #3b82f6;
+    transform: scale(1.05); /* translateX handled by animation end state */
+    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.5);
+  }
+  
+  .outdoor-box .game-card:hover {
+    background: #f59e0b;
+    box-shadow: 0 5px 15px rgba(245, 158, 11, 0.5);
+    color: black;
+  }
+  
+  @keyframes cardEntry {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  /* ===============================
+     CENTER GALLERY
+     =============================== */
+  .gallery-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1000px;
+    overflow: hidden; /* Prevent spill */
+  }
+  
+  .gallery-image {
+    width: 100%;
+    max-height: 80%;
+    object-fit: contain;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    border: 5px solid rgba(255, 255, 255, 0.1);
+    
+    /* Animation Class managed by React state */
+  }
+  
+  /* Slide Animations */
+  .gallery-image.right {
+    animation: slideRight 0.8s ease forwards;
+  }
+  
+  .gallery-image.left {
+    animation: slideLeft 0.8s ease forwards;
+  }
+  
+  @keyframes slideRight {
+    from {
+      opacity: 0;
+      transform: translateX(100px) rotateY(-10deg);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) rotateY(0);
+    }
+  }
+  
+  @keyframes slideLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-100px) rotateY(10deg);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) rotateY(0);
+    }
+  }
+  
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    .sports-layout {
+      grid-template-columns: 1fr;
+      overflow-y: auto;
+    }
+    
+    .gallery-box {
+      height: 400px;
+      order: -1; /* Show image first on mobile */
+    }
+  }
