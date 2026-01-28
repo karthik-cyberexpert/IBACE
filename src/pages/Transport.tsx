@@ -17,16 +17,43 @@ const Transport = () => {
   ];
 
   // Animation Constants
-  const ANIMATION_DURATION = 2.5; // Seconds for the bus to travel full height
+  const ANIMATION_DURATION = 4; // Faster animation as requested
 
   const RouteList = ({ routes, align }: { routes: string[], align: 'left' | 'right' }) => {
-     // For Right alignment (Bus goes Bottom -> Top), we crave the cards revealing from Bottom -> Top.
-     // So the last item (bottom most) should have the smallest delay.
-     // For Left alignment (Bus goes Top -> Bottom), the first item (top most) has smallest delay.
+     // We need to drive the animation based on the "Bus Progress" (0 to 1)
+     // 0 = Start of animation
+     // 1 = End of animation
      
      const totalItems = routes.length;
-     const stepDuration = ANIMATION_DURATION / totalItems;
+     // The bus travels from -10% to 110% visually.
+     // Let's create a progress value that loops 0 -> 1.
+     
+     const [progress, setProgress] = React.useState(0);
 
+     // Looping logic
+     React.useEffect(() => {
+        let start: number | null = null;
+        let animationFrame: number;
+
+        const animate = (timestamp: number) => {
+            if (!start) start = timestamp;
+            const elapsed = (timestamp - start) / 1000; // seconds
+            
+            // Current Loop Progress (0 to 1)
+            const p = (elapsed % ANIMATION_DURATION) / ANIMATION_DURATION;
+            setProgress(p);
+
+            animationFrame = requestAnimationFrame(animate);
+        };
+
+        animationFrame = requestAnimationFrame(animate);
+        return () => cancelAnimationFrame(animationFrame);
+     }, []);
+
+     // Derived Values
+     // Left Side: Bus goes Top -> Bottom.  Progress 0 -> 1 maps to Index 0 -> Last
+     // Right Side: Bus goes Bottom -> Top. Progress 0 -> 1 maps to Last -> Index 0
+     
     return (
     <div style={{
       position: 'relative',
@@ -37,69 +64,79 @@ const Transport = () => {
       padding: '0 20px',
       marginTop: '10px'
     }}>
-      {/* The Bus - Relative to this container to track items easily */}
+      {/* The Bus */}
       <motion.img 
         src="/assets/bus.png"
-        initial={{ 
-            top: align === 'left' ? '-10%' : '110%', 
-            opacity: 1,
-            rotate: align === 'left' ? 180 : 0 
-        }}
-        animate={{ 
-            top: align === 'left' ? '110%' : '-10%'
-        }}
-        transition={{ 
-            duration: ANIMATION_DURATION, 
-            ease: "linear",
-            repeat: Infinity,
-            repeatDelay: 1
-        }}
+        // We use the computed progress to drive position directly to ensure sync
         style={{
             position: 'absolute',
-            left: '50%', // Center horizontally
-            translateX: '-50%', // Centering transform
+            left: '50%',
+            opacity: 1,
+            zIndex: 20,
             width: '60px',
             height: 'auto',
-            zIndex: 20,
+            mixBlendMode: 'screen',
+            // Drive position with progress:
+            // Left: -10% -> 110%
+            // Right: 110% -> -10%
+            top: align === 'left' 
+                ? `${-10 + (progress * 130)}%` 
+                : `${120 - (progress * 130)}%`, // start lower (120%) go high (-10%)
+                
+            transform: `translateX(-50%) ${align === 'left' ? 'rotate(180deg)' : 'rotate(0deg)'}`,
             filter: 'drop-shadow(0 0 10px rgba(59, 130, 246, 0.5))',
-            mixBlendMode: 'screen', // Removes black background
-            // Simple rotation + centering adjustment
-             transform: `translateX(-50%) ${align === 'left' ? 'rotate(180deg)' : 'rotate(0deg)'}`
         }}
       />
 
       {routes.map((route, index) => {
-        // Calculate Delay
-        let delay = 0;
+        // Calculations for visibility
+        // We want the card to show when the bus "passes" it.
+        // Left: Index 0 is at Top. Bus passes it early (progress ~ 0.1)
+        // Right: Index Last is at Bottom. Bus starts Bottom, passes it early.
+        
+        let isVisible = false;
+        
+        // Threshold: At what progress % does the bus pass this card?
+        // We have N cards equally spaced.
+        // Card N's position is roughly (Index / Total) * 100 %.
+        
         if (align === 'left') {
-            // Top -> Bottom: Index 0 is first
-            delay = index * stepDuration;
+            // Bus goes Top (0%) -> Bottom (100%)
+            // Card visual position ~ (index / totalItems)
+            const threshold = (index / totalItems); 
+            // Add a slight buffer so it reveals just AS the bus arrives, not after
+            isVisible = progress > (threshold - 0.05);
         } else {
-            // Bottom -> Top: Last Index is first
-            // index 0 (top) needs to wait for bus to reach top
-            // index N (bottom) changes immediately
-            delay = (totalItems - 1 - index) * stepDuration;
+             // Bus goes Bottom (110%) -> Top (-10%)
+             // We are rendering top-down, so index 0 is Top, index Last is Bottom.
+             // We want bottom cards to show first.
+             // Card visual position from bottom ~ ((total - index) / total)
+             // But simpler: Bus progress 0 means it's at bottom.
+             // As progress increases, it moves UP.
+             // So it reveals (total - 1 - index) items?
+             
+             // Let's map progress to "Current Height from Bottom".
+             // Progress 0 = 0% form bottom. Progress 1 = 100% from bottom.
+             // Card "depth" from bottom:
+             const indexFromBottom = totalItems - 1 - index;
+             const threshold = (indexFromBottom / totalItems);
+             
+             isVisible = progress > (threshold - 0.05);
         }
+
+        // Hard Reset at end of cycle:
+        // When progress wraps to 0, it becomes false, so they hide instantly.
+        // This gives the "Reset" effect the user described naturally loop-wise.
 
         return (
             <motion.div 
             key={route}
-            initial={{ opacity: 0, x: align === 'left' ? -50 : 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ 
-                duration: 0.5,
-                delay: delay,
-                repeat: Infinity,
-                repeatDelay: (ANIMATION_DURATION + 1) - 0.5 // Loop sync
-                // Actually, looping staggered animations is tricky.
-                // Let's just run it once perfectly first.
-                // User said "make a animation", usually implies distinct entry.
-                // To make it loop with the bus:
-                // We'd need keyframes: 0 -> 1 -> 0 (reset)
+            animate={{ 
+                opacity: isVisible ? 1 : 0,
+                x: isVisible ? 0 : (align === 'left' ? -20 : 20),
+                scale: isVisible ? 1 : 0.95
             }}
-            // Standard "One-shot" reveal for now, or Loop?
-            // "make a animation... looks like the bus pulls and places"
-            // Let's make it loop so user sees it constantly.
+            transition={{ duration: 0.3 }} // Fast local transition for the reveal state
             style={{
                 display: 'flex',
                 alignItems: 'center',
